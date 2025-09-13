@@ -3,6 +3,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import postRoutes from './src/routes/post.routes.js';
+import { testConnection } from './src/config/db.js';
 import commentRoutes from './src/routes/comment.routes.js';
 
 dotenv.config();
@@ -78,4 +79,5 @@ app.use('/comments', commentRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
+    testConnection();
 });
