@@ -1,4 +1,5 @@
 import pool from '../config/db.js';
+import { ApiError } from '../utils/ApiError.js';
 
 let posts = [
     {id: 1, Title: "First Post", Content: "This is the first post."},
@@ -13,7 +14,10 @@ export const getAllPosts = async () => {
 
 export const getPostById = async (id) => {
     const [rows] = await pool.query('SELECT * FROM posts WHERE id = ?', [id]);
-    return rows[0] || null;
+    if (!rows[0]) {
+        throw new ApiError(404, 'Post not found');
+    }
+    return rows[0];
 };
 
 export const createPost = async (postData) => {
@@ -32,10 +36,11 @@ export const updatePost = async (id, postData) => {
         'UPDATE posts SET title = ?, content = ? WHERE id = ?',
         [title, content, id] 
     );
-    if (result.affectedRows === 0) {
-        return null;
+    
+    if (!rows[0]) {
+        throw new ApiError(404, 'Post not found');
     }
-    return getPostById(id);
+    return rows[0];
 };
 
 export const partiallyUpdatePost = async (id, updates) => {
@@ -53,13 +58,16 @@ export const partiallyUpdatePost = async (id, updates) => {
         [...values, id]
     );
 
-    if (result.affectedRows === 0) {
-        return null;
+    if (!rows[0]) {
+        throw new ApiError(404, 'Post not found');
     }
-    return getPostById(id);
+    return rows[0];
 };
 
 export const deletePost = async (id) => {
     const [result] = await pool.query('DELETE FROM posts WHERE id = ?', [id]);
-    return result.affectedRows > 0;
+    if (!rows[0]) {
+        throw new ApiError(404, 'Post not found');
+    }
+    return rows[0];
 };
