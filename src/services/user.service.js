@@ -1,0 +1,59 @@
+import pool from '../config/db.js';
+import db from '../config/db.js';
+import  ApiError from '../utils/ApiError.js';
+
+export async function createUser(userData) {
+    const { username, email } = userData;
+    if (!username || !email) {
+        throw new ApiError(400, 'Username and email are required.');
+    }
+    try {
+        const [result] = await db.execute(
+            'INSERT INTO users (username, email) VALUES (?, ?)',
+            [username, email]
+        );
+        return await getUserById(result.insertId);
+    } catch (error) {
+        if (error.code === 'ER_DUP_ENTRY') {
+            throw new ApiError(409, 'Username or email already exists.');
+        }
+        throw error;
+    }
+}
+
+export async function getUserById(id) {
+    const [rows] = await db.execute(
+        'SELECT * FROM users WHERE id = ?',
+        [id]
+    );
+    if (rows.length === 0) {
+        throw new ApiError(404, 'User not found.');
+    }
+    return rows[0];
+}
+
+export async function getAllUsers() {
+    const [rows] = await db.execute('SELECT * FROM users');
+    return rows;
+}
+
+export async function getPostsByAuthorId(userId) {
+    const [posts] = await pool.query('SELECT * FROM posts WHERE authorId = ?', [userId]);
+    return posts;
+};
+
+export const createCommentForPost = async (postId, { text, authorId }) => {
+    try {
+        const [result] = await db.execute(
+            'INSERT INTO comments (postId, text, authorId) VALUES (?, ?, ?)',
+            [postId, text, authorId]
+        );
+        // Return the new comment (optional: fetch by insertId)
+        return { id: result.insertId, postId, text, authorId };
+    } catch (error) {
+        if (error.code === 'ER_NO_REFERENCED_ROW_2') {
+            throw new ApiError(400, 'Invalid author ID. User does not exist.');
+        }
+        throw error;
+    }
+};

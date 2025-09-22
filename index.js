@@ -6,6 +6,7 @@ import postRoutes from './src/routes/post.routes.js';
 import { testConnection } from './src/config/db.js';
 import { errorHandler } from './src/middlewares/errorHandler.middleware.js';
 import commentRoutes from './src/routes/comment.routes.js';
+import userRoutes from './src/routes/user.routes.js';
 
 dotenv.config();
 
@@ -77,6 +78,9 @@ app.delete('/posts/:id', (req, res) => {
 app.use('/posts', postRoutes);
 
 app.use('/comments', commentRoutes);
+
+app.use('/api/users', userRoutes);
+app.use('/api/posts', userRoutes);
 
 app.use(errorHandler);
 
