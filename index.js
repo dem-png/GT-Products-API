@@ -77,10 +77,14 @@ app.delete('/posts/:id', (req, res) => {
 
 app.use('/posts', postRoutes);
 
+app.use('/api/posts', postRoutes);
+
 app.use('/comments', commentRoutes);
 
+app.use('/api/comments', commentRoutes);
+
 app.use('/api/users', userRoutes);
-app.use('/api/posts', userRoutes);
+
 
 app.use(errorHandler);
 

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as userController from '../controllers/user.controller.js';
+import * as commentController from '../controllers/comment.controller.js';
 import { validateComment } from '../middlewares/validator.middleware.js';
 
 const router = Router();

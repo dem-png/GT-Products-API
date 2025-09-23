@@ -1,26 +1,28 @@
-let posts = [
-    {id: 1, Text: "First Post", postId: 1},
-    {id: 2, Text: "Second Post", postId: 1},
-    {id: 3, Text: "Third Post", postId: 2}
-];
-let nextID = 4;
+import pool from '../config/db.js';
+import ApiError from '../utils/ApiError.js';
 
-import { getPostById } from "./post.service.js";
-
-export const getAllComments = () => {
+export const getAllComments = async () => {
+    const [comments] = await pool.query('SELECT * FROM comments');
     return comments;
 };
 
-export const getCommentById = (postId) => {
-    return comments.filter(c => c.postID === postId);
+export const getCommentsByPostId = async (postId) => {
+    const [comments] = await pool.query('SELECT * FROM comments WHERE post_id = ?', [postId]);
+    return comments;
 };
 
-export const createComment = (postId, commentData) => {
-    const post = getPostById(postId);
-    if (!post) {
-        return null;
+export const createComment = async (postId, getPostsByAuthorId, commentData) => {
+    const { text } = commentData;
+    try {
+        const [result] = await pool.query('INSERT INTO comments (postId, authorId, text) VALUES (?, ?, ?)',
+            [postId, getPostsByAuthorId, text]
+        );
+        const [rows] = await pool.query('SELECT * FROM comments WHERE id = ?', [result.insertId]);
+        return rows[0];
+    } catch (error) {
+        if (error.code === "ER_NO_REFERENCED_ROW_2") {
+            throw new ApiError(400, "Invalid postId or authorId. The specified post or user does not exist.");
+        }
+        throw error;
     }
-    const newComment = { id : nextId++, postId: postId, ...commentData };
-    comments.push(newComment);
-    return newComment;
 };

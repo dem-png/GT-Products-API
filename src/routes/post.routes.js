@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as postController from '../controllers/post.controller.js';
 import * as commentController from '../controllers/comment.controller.js';
-import { validatePost } from '../middlewares/validator.middleware.js';
+import { validatePost, validateComment } from '../middlewares/validator.middleware.js';
 
 const router = Router();
 
@@ -13,6 +13,6 @@ router.patch('/:id', postController.partiallyUpdatePost);
 router.delete('/:id', postController.deletePost);
 
 router.get('/:postId/comments', commentController.getCommentsByPostId);
-router.post('/:postId/comments', commentController.createCommentForPost);
+router.post('/:postId/comments', validateComment, commentController.createCommentForPost);
 
 export default router;
