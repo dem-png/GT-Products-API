@@ -7,6 +7,7 @@ import { testConnection } from './src/config/db.js';
 import { errorHandler } from './src/middlewares/errorHandler.middleware.js';
 import commentRoutes from './src/routes/comment.routes.js';
 import userRoutes from './src/routes/user.routes.js';
+import authRoutes from './src/routes/auth.routes.js';
 
 dotenv.config();
 
@@ -84,6 +85,8 @@ app.use('/comments', commentRoutes);
 app.use('/api/comments', commentRoutes);
 
 app.use('/api/users', userRoutes);
+
+app.use('/api/auth', authRoutes);
 
 
 app.use(errorHandler);
