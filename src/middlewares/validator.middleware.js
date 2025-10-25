@@ -14,10 +14,6 @@ export const validatePost = [
         .notEmpty()
         .withMessage('Content is required'),
 
-    body('authorId')
-        .isInt({ min: 1 })
-        .withMessage('A valid author ID is required'),
-
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -57,6 +53,24 @@ export const validateRegistration = [
     body('password')
         .isLength({ min: 6 })
         .withMessage('Password must be at least 6 characters long.'),
+
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ success: false, errors: errors.array() });
+        }
+        next();
+    },
+];
+
+export const validateLogin = [
+    body('email')
+        .isEmail()
+        .withMessage('A valid email is required.'),
+
+    body('password')
+        .notEmpty()
+        .withMessage('Password is required.'),
 
     (req, res, next) => {
         const errors = validationResult(req);
