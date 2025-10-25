@@ -7,11 +7,11 @@ import { authMiddleware } from '../middlewares/auth.middleware.js';
 const router = Router();
 
 router.get('/', postController.getAllPosts);
-router.post('/', validatePost, postController.createPost);
+router.post('/', authMiddleware, validatePost, postController.createPost);
 router.get('/:id', postController.getPostById);
-router.put('/:id', validatePost, postController.updatePost);
+router.put('/:id', authMiddleware, validatePost, postController.updatePost);
 router.patch('/:id', postController.partiallyUpdatePost);
-router.delete('/:id', postController.deletePost);
+router.delete('/:id', authMiddleware, postController.deletePost);
 
 router.post('/', authMiddleware, validatePost, postController.createPost);
 router.get('/:postId/comments', commentController.getCommentsByPostId);
