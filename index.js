@@ -8,6 +8,7 @@ import { errorHandler } from './src/middlewares/errorHandler.middleware.js';
 import commentRoutes from './src/routes/comment.routes.js';
 import userRoutes from './src/routes/user.routes.js';
 import authRoutes from './src/routes/auth.routes.js';
+import photoRoutes from './src/routes/photo.routes.js'; // <-- add this import
 
 dotenv.config();
 
@@ -88,8 +89,13 @@ app.use('/api/users', userRoutes);
 
 app.use('/api/auth', authRoutes);
 
+app.use('/uploads', express.static('uploads'));
+
 
 app.use(errorHandler);
+
+
+app.use('/api/photos', photoRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
