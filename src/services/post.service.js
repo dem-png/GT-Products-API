@@ -43,7 +43,7 @@ export const getPostById = async (id) => {
     return rows[0];
 };
 
-export const createPost = async (postData) => {
+export const createPost = async (postData, authorId) => {
     const { title, content } = postData;
     try {
         const [result] = await pool.query(
