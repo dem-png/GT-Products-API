@@ -1,6 +1,6 @@
 import { body, validationResult } from 'express-validator';
 import * as commentService from '../services/comment.service.js';
-import ApiResponse from '../utils/ApiError.js'; 
+import { ApiResponse } from '../utils/ApiResponse.js'; 
 import asyncHandler from 'express-async-handler';
 
 export const validatePost = [

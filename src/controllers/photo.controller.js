@@ -1,6 +1,7 @@
 import { parse } from 'dotenv';
 import * as photoService from '../services/photo.service.js';
 import ApiError from '../utils/ApiError.js';
+import { ApiResponse } from '../utils/ApiResponse.js';
 import asyncHandler from 'express-async-handler';
 
 export const uploadPhoto = asyncHandler(async (req, res) => {
@@ -15,7 +16,7 @@ export const uploadPhoto = asyncHandler(async (req, res) => {
     const photoData = { caption, filePath, userId };
     const photo = await photoService.createPhoto(photoData);
 
-    res.status(201).json(new ApiiResponse(201, newPhoto, 'Photo uploaded successfully'));
+    res.status(201).json(new ApiResponse(201, photo, 'Photo uploaded successfully'));
 });
 
 export const getUserPhotos = asyncHandler(async (req, res) => {

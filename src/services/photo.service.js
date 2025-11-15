@@ -3,10 +3,10 @@ import ApiError from '../utils/ApiError.js';
 import fs from 'fs/promises';
 
 export const createPhoto = async (photoData) => {
-    const { caption, filaPath, userId } = photoData;
+    const { caption, filePath, userId } = photoData;
     const [result] = await pool.execute(
-        'INSERT INTO photos (caption, filePath, user_id) VALUES (?, ?, ?)',
-        [caption, fileURLToPath, userId]
+        'INSERT INTO photos (caption, filePath, userId) VALUES (?, ?, ?)',
+        [caption, filePath, userId]
     );
     const [rows] = await pool.query('SELECT * FROM photos WHERE id = ?', [result.insertId]);
     return rows[0];

@@ -91,11 +91,10 @@ app.use('/api/auth', authRoutes);
 
 app.use('/uploads', express.static('uploads'));
 
-
-app.use(errorHandler);
-
-
 app.use('/api/photos', photoRoutes);
+
+// Error handler must be last, after all routes
+app.use(errorHandler);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);

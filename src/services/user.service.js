@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import pool from '../config/db.js';
 import db from '../config/db.js';
 import  ApiError from '../utils/ApiError.js';
@@ -23,6 +26,10 @@ export const loginUser = async (loginData) => {
         username: user.username,
         email: user.email
     };
+
+    if (!process.env.JWT_SECRET) {
+        throw new ApiError(500, 'JWT_SECRET is not configured. Please check your .env file.');
+    }
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, { 
         expiresIn: '1h' 
@@ -73,7 +80,7 @@ export async function createUser(userData) {
 };
 
 export const getUserById = async (id) => {
-    const [rows] = await pool.query('SELECT id, username, email< createdAt FROM users WHERE id = ?', [id]);
+    const [rows] = await pool.query('SELECT id, username, email, createdAt FROM users WHERE id = ?', [id]);
     if (rows.length === 0) {
         throw new ApiError(404, 'User not found.');
     }
