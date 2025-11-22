@@ -103,7 +103,6 @@ export const createCommentForPost = async (postId, { text, authorId }) => {
             'INSERT INTO comments (postId, text, authorId) VALUES (?, ?, ?)',
             [postId, text, authorId]
         );
-        // Return the new comment (optional: fetch by insertId)
         return { id: result.insertId, postId, text, authorId };
     } catch (error) {
         if (error.code === 'ER_NO_REFERENCED_ROW_2') {
